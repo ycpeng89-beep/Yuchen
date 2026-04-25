@@ -1,0 +1,6 @@
+{
+  "name": "3D Birthday Candle Blow",
+  "description": "An interactive 3D birthday cake experience where users can blow out candles with smooth animations and smoke effects.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": []
+}
