@@ -30,14 +30,9 @@ export function Scene({ appState, blowStrength }: EnhancedSceneProps) {
         />
         <pointLight position={[-5, 5, -5]} intensity={0.8} />
 
-        <Suspense fallback={
-          <mesh>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color="#ccc" />
-          </mesh>
-        }>
+        <Suspense fallback={null}>
           <Cake appState={appState} blowStrength={blowStrength} />
-          <Environment preset="apartment" blur={0.5} />
+          <Environment preset="apartment" />
           <ContactShadows 
             position={[0, -1.25, 0]} 
             opacity={0.5} 
