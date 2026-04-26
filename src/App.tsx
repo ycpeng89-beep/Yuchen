@@ -162,8 +162,9 @@ export default function App() {
         {/* hidden audio element */}
         <audio 
           ref={audioRef} 
-          src="https://cdn.pixabay.com/audio/2022/10/16/audio_1049b40dbd.mp3" 
+          src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-Birthday-to-You.mp3" 
           loop 
+          preload="auto"
         />
 
         {/* Controls */}
