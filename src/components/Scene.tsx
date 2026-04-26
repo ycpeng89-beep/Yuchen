@@ -11,9 +11,7 @@ interface EnhancedSceneProps extends SceneProps {
 export function Scene({ appState, blowStrength }: EnhancedSceneProps) {
   return (
     <div className="w-full h-full bg-[#fafafa]">
-      <Canvas shadows dpr={[1, 2]}>
-        <PerspectiveCamera makeDefault position={[0, 4, 8]} fov={45} />
-        
+      <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 4, 8], fov: 45 }}>
         <OrbitControls 
           enablePan={false} 
           minPolarAngle={Math.PI / 6} 
@@ -21,22 +19,25 @@ export function Scene({ appState, blowStrength }: EnhancedSceneProps) {
           minDistance={5}
           maxDistance={12}
           autoRotate={false}
-          autoRotateSpeed={0.5}
         />
 
-        <ambientLight intensity={0.7} />
-        <spotLight 
-          position={[10, 12, 10]} 
-          angle={0.2} 
-          penumbra={1} 
-          intensity={1.5} 
+        <ambientLight intensity={1.5} />
+        <directionalLight 
+          position={[5, 10, 5]} 
+          intensity={1.2} 
           castShadow 
+          shadow-mapSize={[1024, 1024]}
         />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} />
+        <pointLight position={[-5, 5, -5]} intensity={0.8} />
 
-        <Suspense fallback={null}>
+        <Suspense fallback={
+          <mesh>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#ccc" />
+          </mesh>
+        }>
           <Cake appState={appState} blowStrength={blowStrength} />
-          <Environment preset="apartment" />
+          <Environment preset="apartment" blur={0.5} />
           <ContactShadows 
             position={[0, -1.25, 0]} 
             opacity={0.5} 
