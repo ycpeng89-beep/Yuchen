@@ -32,7 +32,10 @@ export function Scene({ appState, blowStrength }: EnhancedSceneProps) {
 
         <Suspense fallback={null}>
           <Cake appState={appState} blowStrength={blowStrength} />
-          <Environment preset="apartment" />
+          {/* We wrap Environment separately so it doesn't block the Cake */}
+          <Suspense fallback={null}>
+             <Environment preset="apartment" />
+          </Suspense>
           <ContactShadows 
             position={[0, -1.25, 0]} 
             opacity={0.5} 
