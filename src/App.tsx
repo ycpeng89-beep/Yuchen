@@ -22,6 +22,12 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+    }
+  }, []);
+
   // Normalize volume for blow strength
   const blowStrength = Math.min(1, Math.max(0, (isActive ? volume - 10 : 0) / 40)) + (manualBlowing ? 0.8 : 0);
 
@@ -162,7 +168,7 @@ export default function App() {
         {/* hidden audio element */}
         <audio 
           ref={audioRef} 
-          src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-Birthday-to-You.mp3" 
+          src="https://cdn.pixabay.com/audio/2022/03/15/audio_273117565d.mp3" 
           loop 
           preload="auto"
         />
