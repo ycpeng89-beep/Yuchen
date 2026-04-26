@@ -5,7 +5,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Wind, RotateCcw, Mic, MicOff } from 'lucide-react';
+import { Wind, RotateCcw, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Scene } from './components/Scene';
 import { GreetingCard } from './components/GreetingCard';
@@ -18,8 +18,37 @@ export default function App() {
   const [manualBlowing, setManualBlowing] = useState(false);
   const blowTimerRef = useRef<number | null>(null);
 
+  // Background Music State
+  const [isMuted, setIsMuted] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   // Normalize volume for blow strength
   const blowStrength = Math.min(1, Math.max(0, (isActive ? volume - 10 : 0) / 40)) + (manualBlowing ? 0.8 : 0);
+
+  const toggleMusic = useCallback(() => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.play().catch(e => console.error("Audio play failed:", e));
+        setIsMuted(false);
+      } else {
+        audioRef.current.pause();
+        setIsMuted(true);
+      }
+    }
+  }, [isMuted]);
+
+  // Attempt to play on first interaction
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (audioRef.current && isMuted) {
+        // We only log, don't force start to respect user choice usually, 
+        // but here we can try to "unmute" if the user hasn't explicitly muted.
+        // Actually, better to let them click the toggle.
+      }
+    };
+    window.addEventListener('mousedown', handleFirstInteraction);
+    return () => window.removeEventListener('mousedown', handleFirstInteraction);
+  }, [isMuted]);
 
   const triggerExtinguish = useCallback(() => {
     if (appState === AppState.WAITING || appState === AppState.BLOWING) {
@@ -110,7 +139,17 @@ export default function App() {
         </motion.header>
 
         {/* Audio Toggle */}
-        <div className="absolute top-8 right-8 pointer-events-auto">
+        <div className="absolute top-8 right-8 pointer-events-auto flex gap-2">
+          {/* Background Music Toggle */}
+          <button
+            onClick={toggleMusic}
+            className={`p-3 rounded-full shadow-lg transition-all ${!isMuted ? 'bg-pink-500 text-white' : 'bg-white text-gray-400'}`}
+            title={!isMuted ? "Pause Music" : "Play Music"}
+          >
+            {!isMuted ? <Volume2 className="w-6 h-6 animate-pulse" /> : <VolumeX className="w-6 h-6" />}
+          </button>
+
+          {/* Microphone Toggle */}
           <button
             onClick={isActive ? stopMonitoring : startMonitoring}
             className={`p-3 rounded-full shadow-lg transition-all ${isActive ? 'bg-green-500 text-white' : 'bg-white text-gray-400'}`}
@@ -119,6 +158,13 @@ export default function App() {
             {isActive ? <Mic className="w-6 h-6 animate-pulse" /> : <MicOff className="w-6 h-6" />}
           </button>
         </div>
+
+        {/* hidden audio element */}
+        <audio 
+          ref={audioRef} 
+          src="https://cdn.pixabay.com/audio/2022/10/16/audio_1049b40dbd.mp3" 
+          loop 
+        />
 
         {/* Controls */}
         <div className="w-full max-w-xs flex flex-col items-center gap-6 pointer-events-auto pb-8">

@@ -12,6 +12,9 @@ export function Scene({ appState, blowStrength }: EnhancedSceneProps) {
   return (
     <div className="w-full h-full bg-[#fafafa]">
       <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 4, 8], fov: 45 }}>
+        {/* Set explicit background color to prevent flashing during load */}
+        <color attach="background" args={['#fafafa']} />
+        
         <OrbitControls 
           enablePan={false} 
           minPolarAngle={Math.PI / 6} 
@@ -21,18 +24,18 @@ export function Scene({ appState, blowStrength }: EnhancedSceneProps) {
           autoRotate={false}
         />
 
-        <ambientLight intensity={1.5} />
+        <ambientLight intensity={1.8} />
         <directionalLight 
           position={[5, 10, 5]} 
-          intensity={1.2} 
+          intensity={1.5} 
           castShadow 
           shadow-mapSize={[1024, 1024]}
         />
-        <pointLight position={[-5, 5, -5]} intensity={0.8} />
+        <pointLight position={[-5, 5, -5]} intensity={1.0} />
 
         <Suspense fallback={null}>
           <Cake appState={appState} blowStrength={blowStrength} />
-          {/* We wrap Environment separately so it doesn't block the Cake */}
+          {/* Load environment separately or keep it light */}
           <Suspense fallback={null}>
              <Environment preset="apartment" />
           </Suspense>
