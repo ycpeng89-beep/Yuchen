@@ -168,9 +168,11 @@ export default function App() {
         {/* hidden audio element */}
         <audio 
           ref={audioRef} 
-          src="https://cdn.pixabay.com/audio/2022/03/15/audio_273117565d.mp3" 
+          src="https://raw.githubusercontent.com/Anand-Ganesh/happy-birthday/master/music.mp3" 
           loop 
           preload="auto"
+          onCanPlayThrough={() => console.log("Audio loaded successfully")}
+          onError={(e) => console.error("Audio element error:", e)}
         />
 
         {/* Controls */}
